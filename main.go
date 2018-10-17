@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -30,15 +31,29 @@ func main() {
 	gitignores := pullGitignores(docs)
 
 	if cmdline.IsOptionSet("l") {
-		listGitignores(gitignores)
+		for _, gitignore := range gitignores {
+			fmt.Println(gitignore.title)
+		}
+	}
+
+	args := cmdline.TrailingArgumentsValues("name")
+
+	if len(args) != 0 {
+		for _, gitignore := range gitignores {
+			if gitignore.title == strings.ToLower(args[0]) {
+				fmt.Println(fetch(gitignore.href))
+				break
+			}
+		}
 	}
 }
 
-// Prints the list of known gitignores titles.
-func listGitignores(gitignores []gitignore) {
-	for _, gitignore := range gitignores {
-		fmt.Println(gitignore.title)
-	}
+// Fetch web content ueing the given url and returns the result as string.
+// TODO: handle errors
+func fetch(url string) string {
+	r, _ := http.Get(url)
+	body, _ := ioutil.ReadAll(r.Body)
+	return string(body)
 }
 
 // Uses the given documents to pull the available gitignores
@@ -54,8 +69,9 @@ func pullGitignores(docs []*goquery.Document) []gitignore {
 
 			if exists {
 				gitignores = append(gitignores, gitignore{
-					strings.Replace(title, ".gitignore", "", 1),
-					href,
+					strings.Replace(strings.ToLower(title), ".gitignore", "", 1),
+					"https://raw.githubusercontent.com" +
+						strings.Replace(href, "/blob", "", 1),
 				})
 			}
 		})
