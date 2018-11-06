@@ -45,7 +45,7 @@ func main() {
 			fmt.Printf(
 				"%v%v(%v)\n",
 				gitignore.title,
-				strings.Repeat(" ", 25 - len(gitignore.title)),
+				strings.Repeat(" ", 25-len(gitignore.title)),
 				gitignore.href,
 			)
 		}
@@ -61,8 +61,8 @@ func main() {
 		query := strings.ToUpper(args[0])
 		if gitignore.title == strings.ToLower(query) {
 			fmt.Printf(
-				"\n--------------- BEGIN %v .GITIGNORE ---------------\n" +
-					"\n%v\n---------------END %v .GITIGNORE---------------\n",
+				"\n--------------- BEGIN %v .GITIGNORE ---------------\n\n"+
+					"%v\n---------------- END %v .GITIGNORE ----------------\n",
 				query,
 				fetch(gitignore.href),
 				query,
