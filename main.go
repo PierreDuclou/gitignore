@@ -60,13 +60,7 @@ func main() {
 	for _, gitignore := range gitignores {
 		query := strings.ToUpper(args[0])
 		if gitignore.title == strings.ToLower(query) {
-			fmt.Printf(
-				"\n--------------- BEGIN %v .GITIGNORE ---------------\n\n"+
-					"%v\n---------------- END %v .GITIGNORE ----------------\n",
-				query,
-				fetch(gitignore.href),
-				query,
-			)
+			fmt.Printf(query, fetch(gitignore.href), query)
 			os.Exit(0)
 		}
 	}
